@@ -7,6 +7,7 @@
 #include <unistd.h>
 
 int trang_thai = 1;
+//tạo key dùng chung
 pthread_mutex_t key;
 
 typedef struct
@@ -19,13 +20,13 @@ typedef struct
 int uart_init(const char *path)
 {
     struct termios tty;
-    int fd = open(path, O_RDWR | O_NOCTTY | O_NDELAY);
+    int fd = open(path, O_RDWR | O_NOCTTY | O_NDELAY);//cờ NDELAY de truy cap vao file tranh delay
     if(fd < 0)
     {
         perror("open uart");
         return -1;
-    }
-
+    }delay
+//xóa cờ NDELAY
     fcntl(fd, F_SETFL, 0);
     tcgetattr(fd, &tty);
 
@@ -36,14 +37,14 @@ int uart_init(const char *path)
     tty.c_cflag |= CS8;
     tty.c_cflag &= ~CSTOPB;
     tty.c_cflag &= ~PARENB;
-
+//set baudrate
     cfsetispeed(&tty, B9600);
     cfsetospeed(&tty, B9600);
 
-    tty.c_cc[VMIN] = 0;
-    tty.c_cc[VTIME] = 10;
+    tty.c_cc[VMIN] = 0;//so byte min gui
+    tty.c_cc[VTIME] = 10;//thoi gian toi da lay byte
 
-    tcsetattr(fd, TCSANOW, &tty);
+    tcsetattr(fd, TCSANOW,baudrate &tty);
 
     return fd;
 }
@@ -140,5 +141,4 @@ int main()
     close(uart_fd);
 
     return 0;
-}# Demo
-# Demo
+}
